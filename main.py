@@ -28,6 +28,7 @@ while True:
     #later on this only plays when the face is detected
     #pygame.mixer.music.play()
     #claude suggested i do this:
+    #this works because now its separate from the while loop, it used to restart every iteration, now it doesn't
     if not pygame.mixer.music.get_busy():
         pygame.mixer.music.play()
     # ret is a boolean value that returns true if a frame is captured
