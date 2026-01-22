@@ -2,9 +2,22 @@ import face_recognition
 import face_recognition_models
 import numpy as np
 import cv2 as cv
+import pygame.mixer_music
+
+
+
+    
+
 
 
 cap = cv.VideoCapture(0)
+#must init mixer always
+pygame.mixer.init()
+#this will later be a bunch of random songs
+pygame.mixer.music.load(r"music/CryForMe.mp3")
+pygame.mixer.music.set_volume(0.6)
+#tried putting this in the while loop but the music doesnt play if im in the while loop
+#pygame.mixer.music.play()
 
 if not cap.isOpened():
     print("Cannot Open")
@@ -12,6 +25,11 @@ if not cap.isOpened():
 
 
 while True:
+    #later on this only plays when the face is detected
+    #pygame.mixer.music.play()
+    #claude suggested i do this:
+    if not pygame.mixer.music.get_busy():
+        pygame.mixer.music.play()
     # ret is a boolean value that returns true if a frame is captured
     ret, frame = cap.read();
 
@@ -22,6 +40,8 @@ while True:
     cv.imshow('frame',frame)
     if cv.waitKey(1) == ord('q'): #this is in the documentation but idk what it means
         #ah turns out it is just a way to exit by clicking q, cool
+        pygame.mixer.music.stop()
+        pygame.mixer.music.unload()
         break
 
 
