@@ -34,9 +34,22 @@ while True:
     # ret is a boolean value that returns true if a frame is captured
     ret, frame = cap.read();
 
+   
+
     if not ret:
         print("Frame error")
         break
+
+
+  
+    
+    face_locations = face_recognition.face_locations(frame)
+    
+    for face_location in face_locations:
+
+    # Print the location of each face in this image
+        top, right, bottom, left = face_location
+        cv.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 2)
 
     cv.imshow('frame',frame)
     if cv.waitKey(1) == ord('q'): #this is in the documentation but idk what it means
