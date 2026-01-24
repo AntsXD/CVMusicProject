@@ -8,7 +8,7 @@ import pygame.mixer_music
 
     
 
-
+music_started= False
 
 cap = cv.VideoCapture(0)
 #must init mixer always
@@ -29,8 +29,9 @@ while True:
     #pygame.mixer.music.play()
     #claude suggested i do this:
     #this works because now its separate from the while loop, it used to restart every iteration, now it doesn't
-    if not pygame.mixer.music.get_busy():
-        pygame.mixer.music.play()
+    #if not pygame.mixer.music.get_busy():
+    #pygame.mixer.music.play()
+
     # ret is a boolean value that returns true if a frame is captured
     ret, frame = cap.read();
 
@@ -44,12 +45,23 @@ while True:
   
     
     face_locations = face_recognition.face_locations(frame)
-    
+
+    #trying to tie in face logic to music
+ 
+    if face_locations != []:  # Face detected
+        if not music_started:
+            pygame.mixer.music.play()
+            music_started = True
+        else:
+            pygame.mixer.music.unpause()
+    else:  # No face detected
+        pygame.mixer.music.pause()
+
     for face_location in face_locations:
 
     # Print the location of each face in this image
         top, right, bottom, left = face_location
-        cv.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 2)
+        cv.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 3)
 
     cv.imshow('frame',frame)
     if cv.waitKey(1) == ord('q'): #this is in the documentation but idk what it means
