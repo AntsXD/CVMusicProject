@@ -3,6 +3,17 @@ import face_recognition_models
 import numpy as np
 import cv2 as cv
 import pygame.mixer_music
+import random
+
+
+music_list = [
+    r"music/CryForMe.mp3",
+    r"music/Timeless.mp3",
+    r"music/CryForMe.mp3",
+    r"music/BaptizedInFear.mp3"
+]
+
+random_song = random.choice(music_list)
 
 
 
@@ -18,7 +29,8 @@ cap = cv.VideoCapture(0)
 #must init mixer always
 pygame.mixer.init()
 #this will later be a bunch of random songs
-pygame.mixer.music.load(r"music/CryForMe.mp3")
+#bunch of songs added
+pygame.mixer.music.load(random_song)
 pygame.mixer.music.set_volume(0.6)
 #tried putting this in the while loop but the music doesnt play if im in the while loop
 #pygame.mixer.music.play()
