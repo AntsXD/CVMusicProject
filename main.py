@@ -9,6 +9,10 @@ import pygame.mixer_music
     
 
 music_started= False
+friend_detected = False
+
+image = face_recognition.load_image_file(r"imgs/ID.jpeg")
+image_encoding = face_recognition.face_encodings(image)[0]
 
 cap = cv.VideoCapture(0)
 #must init mixer always
@@ -25,6 +29,8 @@ if not cap.isOpened():
 
 
 while True:
+    #must add this so that the music can stop else it will go infinitely
+    friend_detected = False
     #later on this only plays when the face is detected
     #pygame.mixer.music.play()
     #claude suggested i do this:
@@ -48,7 +54,35 @@ while True:
 
     #trying to tie in face logic to music
  
-    if face_locations != []:  # Face detected
+    # if face_locations != []:  # Face detected
+    #     #needed to use music_started variable just to be able to differentiate between play and unpause state, so the .get_busy() is no longer needed 
+    #     if not music_started:
+    #         pygame.mixer.music.play()
+    #         music_started = True
+    #     else:
+    #         pygame.mixer.music.unpause()
+    # else:  # No face detected
+    #     pygame.mixer.music.pause()
+
+    
+
+
+    face_encodings = face_recognition.face_encodings(frame, face_locations)
+
+    for (top, right, bottom, left), face_encoding in zip(face_locations,face_encodings):
+        matches = face_recognition.compare_faces([image_encoding],face_encoding)
+        name = "Unknown"
+        if matches[0]:
+            name = "Ants"
+            #using this for the music player
+            friend_detected = True
+            cv.rectangle(frame,(left,top),(right,bottom),(255,0,0),3)
+            cv.putText(frame,name,(left,top-10),cv.FONT_HERSHEY_SIMPLEX,0.5,(255,0,0),2)
+            break
+
+     #now the music only plays if this the exact face       
+    if friend_detected:  # Face recognized
+        #needed to use music_started variable just to be able to differentiate between play and unpause state, so the .get_busy() is no longer needed 
         if not music_started:
             pygame.mixer.music.play()
             music_started = True
@@ -57,11 +91,9 @@ while True:
     else:  # No face detected
         pygame.mixer.music.pause()
 
-    for face_location in face_locations:
 
-    # Print the location of each face in this image
-        top, right, bottom, left = face_location
-        cv.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 3)
+
+
 
     cv.imshow('frame',frame)
     if cv.waitKey(1) == ord('q'): #this is in the documentation but idk what it means
