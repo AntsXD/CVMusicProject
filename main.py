@@ -4,6 +4,9 @@ import numpy as np
 import cv2 as cv
 import pygame.mixer_music
 import random
+from PIL import Image, ImageOps
+import numpy as np
+
 
 
 music_list = [
@@ -22,7 +25,9 @@ random_song = random.choice(music_list)
 music_started= False
 friend_detected = False
 
-image = face_recognition.load_image_file(r"imgs/ID.jpeg")
+img = Image.open(r"imgs/ID.JPG")
+img = ImageOps.exif_transpose(img)  # Auto-rotates based on EXIF data
+image = np.array(img)
 image_encoding = face_recognition.face_encodings(image)[0]
 
 cap = cv.VideoCapture(0)
@@ -85,11 +90,11 @@ while True:
         matches = face_recognition.compare_faces([image_encoding],face_encoding)
         name = "Unknown"
         if matches[0]:
-            name = "Ants"
+            name = "Joy"
             #using this for the music player
             friend_detected = True
-            cv.rectangle(frame,(left,top),(right,bottom),(255,0,0),3)
-            cv.putText(frame,name,(left,top-10),cv.FONT_HERSHEY_SIMPLEX,0.5,(255,0,0),2)
+            cv.rectangle(frame,(left,top),(right,bottom),(255,192,203),3)
+            cv.putText(frame,name,(left,top-10),cv.FONT_HERSHEY_SIMPLEX,0.5,(255,192,203),2)
             break
 
      #now the music only plays if this the exact face       
